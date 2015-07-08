@@ -2,7 +2,7 @@ require "./../spec_helper"
 require "http"
 
 class FooController
-  include Routing::WithContext
+  include Routing::Routable
 
   def method1
     10
@@ -22,7 +22,7 @@ class FooController
 end
 
 class BarController
-  include Routing::WithContext
+  include Routing::Routable
 
   def method3
     "30"
@@ -30,7 +30,9 @@ class BarController
 end
 
 module SpecHttp
-  http_router Sample1 do
+  class Sample1
+    include Routing::HttpRequestRouter
+
     get "m1", "foo#method1"
     get "m2", "foo#method2"
     post "m3", "bar#method3"
@@ -55,7 +57,7 @@ def post(path)
   HTTP::Request.new("POST", path)
 end
 
-describe Routing::HttpRouter do
+describe Routing::HttpRequestRouter do
   it "should build routes" do
     routes.should_not be_nil
   end
