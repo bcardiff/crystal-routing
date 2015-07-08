@@ -26,6 +26,8 @@ module App
     get "m1", "foo#method1"
     post "m2", "bar#method2"
     get "foo/:id", "foo#method2"
+
+    root "foo#method1"
   end
 end
 

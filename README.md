@@ -42,6 +42,7 @@ module App
   http_router Routes do
     get "m1", "foo#method1"
     get "foo/:id", "foo#method2"
+    root "foo#method1"
   end
 end
 
@@ -61,6 +62,9 @@ $ crystal app.cr
 
 Use the server
 ```
+$ curl http://localhost:8080
+method1
+
 $ curl http://localhost:8080/m1
 method1
 

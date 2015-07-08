@@ -12,6 +12,11 @@ macro base_router(class_name)
     end
 
     def should_process_path?(path, pattern)
+      if pattern.empty? && path.empty?
+        @last_params = {} of String => String
+        return true
+      end
+
       regex = Regex.new(pattern.gsub(/(:\w*)/, ".*"))
       return false unless path.match(regex)
 

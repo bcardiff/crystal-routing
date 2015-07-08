@@ -15,6 +15,10 @@ class FooController
   def page
     routing_context.params["page_id"]
   end
+
+  def home
+    "home page"
+  end
 end
 
 class BarController
@@ -34,6 +38,8 @@ module SpecHttp
     get "m1", "foo#method2" # this should not be reachable
 
     get "p/:page_id", "foo#page"
+
+    root "foo#home"
   end
 end
 
@@ -62,5 +68,9 @@ describe Routing::HttpRouter do
 
   it "should get params from route part" do
     routes.route(get("/p/help")).should eq("help")
+  end
+
+  it "should get home page" do
+    routes.route(get("/")).should eq("home page")
   end
 end

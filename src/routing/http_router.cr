@@ -26,6 +26,10 @@ macro http_router(class_name)
       append_route(\{{pattern}}, \{{mapping}}, {via: "POST"})
     end
 
+    macro root(mapping)
+      append_route("", \{{mapping}}, {via: "GET"})
+    end
+
     {{yield}}
   end
 end
