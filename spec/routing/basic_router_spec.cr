@@ -21,6 +21,8 @@ module Spec1
     on "m1", "foo#method1"
     on "m2", "foo#method2"
     on "m3", "bar#method3"
+
+    on "m1", "foo#method2" # this should not be reachable
   end
 end
 
