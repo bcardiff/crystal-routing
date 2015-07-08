@@ -6,43 +6,24 @@ module Routing
 end
 
 macro http_router(class_name)
-  class {{class_name}}
-    def route(request)
-      process_route(request) do |res|
-        return res
-      end
-      raise "not route for #{request.inspect}"
+  base_router {{class_name}} do
+    def should_process?(request, pattern, options)
+      request.method == options[:via] && request.path[1..-1] == pattern
     end
 
-    def process_route(request, &block)
-    end
-
-    def match_request(request, pattern, via)
-      request.method == via && request.path[1..-1] == pattern
-    end
-
-    macro get(pattern, mapping)
-      match(\{{pattern}}, \{{mapping}}, "GET")
-    end
-
-    macro post(pattern, mapping)
-      match(\{{pattern}}, \{{mapping}}, "POST")
-    end
-
-    macro match(pattern, mapping, via)
+    macro route_exec(mapping)
       \{% receiver_and_message = mapping.split '#' %}
       \{% receiver = receiver_and_message[0] %}
       \{% message = receiver_and_message[1] %}
-      def process_route(request)
-        previous_def do |res|
-          yield res
-          return
-        end
+      \{{receiver.id.capitalize}}Controller.new.\{{message.id}}
+    end
 
-        if match_request(request, \{{pattern}}, \{{via}})
-          yield \{{receiver.id.capitalize}}Controller.new.\{{message.id}}
-        end
-      end
+    macro get(pattern, mapping)
+      append_route(\{{pattern}}, \{{mapping}}, {via: "GET"})
+    end
+
+    macro post(pattern, mapping)
+      append_route(\{{pattern}}, \{{mapping}}, {via: "POST"})
     end
 
     {{yield}}

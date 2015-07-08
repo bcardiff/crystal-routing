@@ -4,31 +4,20 @@ module Routing
 end
 
 macro basic_router(class_name)
-  class {{class_name}}
-    def route(path)
-      process_route(path) do |res|
-        return res
-      end
-      raise "not route for #{path}"
+  base_router {{class_name}} do
+    def should_process?(path, pattern, options)
+      path == pattern
     end
 
-    def process_route(path, &block)
-    end
-
-    macro on(pattern, mapping)
+    macro route_exec(mapping)
       \{% receiver_and_message = mapping.split '#' %}
       \{% receiver = receiver_and_message[0] %}
       \{% message = receiver_and_message[1] %}
-      def process_route(path)
-        previous_def do |res|
-          yield res
-          return
-        end
+      \{{receiver.id.capitalize}}.new.\{{message.id}}
+    end
 
-        if path == \{{pattern}}
-          yield \{{receiver.id.capitalize}}.new.\{{message.id}}
-        end
-      end
+    macro on(pattern, mapping)
+      append_route(\{{pattern}}, \{{mapping}}, nil)
     end
 
     {{yield}}
