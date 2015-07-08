@@ -1,5 +1,7 @@
 # crystal-routing
 
+[![Build Status](https://travis-ci.org/bcardiff/crystal-routing.svg)](https://travis-ci.org/bcardiff/crystal-routing)
+
 Extensible library to deal with http request and string based routing in Crystal.
 
 Features:
