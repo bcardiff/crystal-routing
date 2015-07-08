@@ -2,6 +2,8 @@ require "./../spec_helper"
 require "http"
 
 class FooController
+  include Routing::WithContext
+
   def method1
     10
   end
@@ -9,9 +11,15 @@ class FooController
   def method2
     20
   end
+
+  def page
+    routing_context.params["page_id"]
+  end
 end
 
 class BarController
+  include Routing::WithContext
+
   def method3
     "30"
   end
@@ -24,6 +32,8 @@ module SpecHttp
     post "m3", "bar#method3"
 
     get "m1", "foo#method2" # this should not be reachable
+
+    get "p/:page_id", "foo#page"
   end
 end
 
@@ -48,5 +58,9 @@ describe Routing::HttpRouter do
     routes.route(get("/m1")).should eq(10)
     routes.route(get("/m2")).should eq(20)
     routes.route(post("/m3")).should eq("30")
+  end
+
+  it "should get params from route part" do
+    routes.route(get("/p/help")).should eq("help")
   end
 end

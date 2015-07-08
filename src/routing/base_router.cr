@@ -11,6 +11,29 @@ macro base_router(class_name)
     def process_route(request, &block)
     end
 
+    def should_process_path?(path, pattern)
+      regex = Regex.new(pattern.gsub(/(:\w*)/, ".*"))
+      return false unless path.match(regex)
+
+      params        = {} of String => String
+      path_items    = path.split("/")
+      pattern_items = pattern.split("/")
+      path_items.length.times do |i|
+        if pattern_items[i].match(/(:\w*)/)
+          params[pattern_items[i].gsub(/:/, "")] = path_items[i]
+        end
+      end
+
+      @last_params = params
+      return true
+    end
+
+    def with_context(receiver)
+      receiver.tap do |r|
+        r.routing_context = Routing::Context.new(@last_params.not_nil!)
+      end
+    end
+
     macro append_route(pattern, mapping, options)
       def process_route(request)
         previous_def do |res|
