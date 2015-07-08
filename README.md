@@ -1,6 +1,11 @@
-# routing
+# crystal-routing
 
-TODO: Write a description here for library
+Extensible library to deal with http request and string based routing in Crystal.
+
+Features:
+
+* Building blocks to define others routing/delegation mechanisms
+* Compiled time check method invocation
 
 ## Installation
 
@@ -15,10 +20,43 @@ end
 ## Usage
 
 ```crystal
+# file: app.cr
+require "http/server"
 require "routing"
+
+class FooController
+  def method1
+    HTTP::Response.ok "text/plain", "method1"
+  end
+end
+
+module App
+  http_router Routes do
+    get "m1", "foo#method1"
+  end
+end
+
+routes = App::Routes.new
+server = HTTP::Server.new(8080) do |request|
+  routes.route(request)
+end
+
+puts "Listening on http://0.0.0.0:8080"
+server.listen
 ```
 
-TODO: Write usage here for library
+Run the server
+```
+$ crystal app.cr
+```
+
+Use the server
+```
+$ curl http://localhost:8080/m1
+method1
+```
+
+More in samples and specs
 
 ## Development
 
