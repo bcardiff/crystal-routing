@@ -1,6 +1,5 @@
-macro base_router(class_name)
-  class {{class_name}}
-
+module Routing
+  module Base
     def route(request)
       process_route(request) do |res|
         return res
@@ -46,12 +45,10 @@ macro base_router(class_name)
           return
         end
 
-        if should_process?(request, \{{pattern}}, \{{options}})
-          yield route_exec \{{mapping}}
+        if should_process?(request, {{pattern}}, {{options}})
+          yield route_exec {{mapping}}
         end
       end
     end
-
-    {{yield}}
   end
 end

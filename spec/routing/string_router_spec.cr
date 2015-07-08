@@ -25,7 +25,12 @@ class Bar
 end
 
 module Spec1
-  basic_router Sample1 do
+  class Sample1
+    def process_route(request, &block)
+    end
+
+    include Routing::StringRouter
+
     on "m1", "foo#method1"
     on "m2", "foo#method2"
     on "m3", "bar#method3"
@@ -39,7 +44,7 @@ def routes1
   Spec1::Sample1.new
 end
 
-describe Routing::BasicRouter do
+describe Routing::StringRouter do
   it "should build routes" do
     routes1.should_not be_nil
   end

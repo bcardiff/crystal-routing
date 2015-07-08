@@ -30,7 +30,12 @@ class BarController
 end
 
 module SpecHttp
-  http_router Sample1 do
+  class Sample1
+    def process_route(request, &block)
+    end
+
+    include Routing::HttpRequestRouter
+
     get "m1", "foo#method1"
     get "m2", "foo#method2"
     post "m3", "bar#method3"
@@ -55,7 +60,7 @@ def post(path)
   HTTP::Request.new("POST", path)
 end
 
-describe Routing::HttpRouter do
+describe Routing::HttpRequestRouter do
   it "should build routes" do
     routes.should_not be_nil
   end
