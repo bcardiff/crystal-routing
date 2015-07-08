@@ -2,10 +2,12 @@ require "./base"
 
 module Routing
   module HttpRequestRouter
-    include Routing::Base
+    macro included
+      include Routing::Base
 
-    def should_process?(request, pattern, options)
-      request.method == options[:via] && should_process_path?(request.path[1..-1], pattern)
+      def should_process?(request, pattern, options)
+        request.method == options[:via] && should_process_path?(request.path[1..-1], pattern)
+      end
     end
 
     macro route_exec(mapping)

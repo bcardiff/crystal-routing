@@ -1,5 +1,5 @@
 module Routing
-  module WithContext
+  module Routable
     property! routing_context :: Context
   end
 end

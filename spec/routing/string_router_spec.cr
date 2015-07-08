@@ -1,7 +1,7 @@
 require "./../spec_helper"
 
 class Foo
-  include Routing::WithContext
+  include Routing::Routable
 
   def method1
     1
@@ -13,7 +13,7 @@ class Foo
 end
 
 class Bar
-  include Routing::WithContext
+  include Routing::Routable
 
   def method3
     "3"
@@ -26,9 +26,6 @@ end
 
 module Spec1
   class Sample1
-    def process_route(request, &block)
-    end
-
     include Routing::StringRouter
 
     on "m1", "foo#method1"

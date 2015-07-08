@@ -2,7 +2,7 @@ require "./../spec_helper"
 require "http"
 
 class FooController
-  include Routing::WithContext
+  include Routing::Routable
 
   def method1
     10
@@ -22,7 +22,7 @@ class FooController
 end
 
 class BarController
-  include Routing::WithContext
+  include Routing::Routable
 
   def method3
     "30"
@@ -31,9 +31,6 @@ end
 
 module SpecHttp
   class Sample1
-    def process_route(request, &block)
-    end
-
     include Routing::HttpRequestRouter
 
     get "m1", "foo#method1"

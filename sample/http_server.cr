@@ -2,7 +2,7 @@ require "http/server"
 require "../src/routing"
 
 class FooController
-  include Routing::WithContext
+  include Routing::Routable
 
   def method1
     HTTP::Response.ok "text/plain", "method1"
@@ -14,7 +14,7 @@ class FooController
 end
 
 class BarController
-  include Routing::WithContext
+  include Routing::Routable
 
   def method2
     HTTP::Response.ok "text/plain", "method2"
@@ -22,7 +22,9 @@ class BarController
 end
 
 module App
-  http_router Routes do
+  class Routes
+    include Routing::HttpRequestRouter
+
     get "m1", "foo#method1"
     post "m2", "bar#method2"
     get "foo/:id", "foo#method2"

@@ -2,10 +2,12 @@ require "./base"
 
 module Routing
   module StringRouter
-    include Routing::Base
+    macro included
+      include Routing::Base
 
-    def should_process?(path, pattern, options)
-      should_process_path?(path, pattern)
+      def should_process?(path, pattern, options)
+        should_process_path?(path, pattern)
+      end
     end
 
     macro route_exec(mapping)

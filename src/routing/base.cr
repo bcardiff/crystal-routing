@@ -1,40 +1,42 @@
 module Routing
   module Base
-    def route(request)
-      process_route(request) do |res|
-        return res
+    macro included
+      def route(request)
+        process_route(request) do |res|
+          return res
+        end
+        raise "no route for #{request.inspect}"
       end
-      raise "no route for #{request.inspect}"
-    end
 
-    def process_route(request, &block)
-    end
+      def process_route(request, &block)
+      end
 
-    def should_process_path?(path, pattern)
-      if pattern.empty? && path.empty?
-        @last_params = {} of String => String
+      def should_process_path?(path, pattern)
+        if pattern.empty? && path.empty?
+          @last_params = {} of String => String
+          return true
+        end
+
+        regex = Regex.new(pattern.gsub(/(:\w*)/, ".*"))
+        return false unless path.match(regex)
+
+        params        = {} of String => String
+        path_items    = path.split("/")
+        pattern_items = pattern.split("/")
+        path_items.length.times do |i|
+          if pattern_items[i].match(/(:\w*)/)
+            params[pattern_items[i].gsub(/:/, "")] = path_items[i]
+          end
+        end
+
+        @last_params = params
         return true
       end
 
-      regex = Regex.new(pattern.gsub(/(:\w*)/, ".*"))
-      return false unless path.match(regex)
-
-      params        = {} of String => String
-      path_items    = path.split("/")
-      pattern_items = pattern.split("/")
-      path_items.length.times do |i|
-        if pattern_items[i].match(/(:\w*)/)
-          params[pattern_items[i].gsub(/:/, "")] = path_items[i]
+      def with_context(receiver)
+        receiver.tap do |r|
+          r.routing_context = Routing::Context.new(@last_params.not_nil!)
         end
-      end
-
-      @last_params = params
-      return true
-    end
-
-    def with_context(receiver)
-      receiver.tap do |r|
-        r.routing_context = Routing::Context.new(@last_params.not_nil!)
       end
     end
 
