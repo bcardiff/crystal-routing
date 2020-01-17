@@ -11,12 +11,12 @@ Features:
 
 ## Installation
 
-Add it to `Projectfile`
+Add this to your application's `shard.yml`:
 
 ```crystal
-deps do
-  github "bcardiff/crystal-routing"
-end
+dependencies:
+  routing:
+    github: bcardiff/crystal-routing
 ```
 
 ## Usage
